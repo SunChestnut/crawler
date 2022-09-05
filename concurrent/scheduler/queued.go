@@ -15,9 +15,8 @@ func (s *QueuedScheduler) Submit(request engine.Request) {
 	s.requestChan <- request
 }
 
-func (s *QueuedScheduler) ConfigureMasterWorkerChan(requests chan engine.Request) {
-	// TODO implement me
-	//panic("implement me")
+func (s *QueuedScheduler) WorkerChan() chan engine.Request {
+	return make(chan engine.Request)
 }
 
 // WorkerReady 告诉外界有 worker 已经就绪了，可以继续接收任务了

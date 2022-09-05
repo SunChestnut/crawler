@@ -15,9 +15,14 @@ type ConcurrentEngine struct {
 
 type Scheduler interface {
 	Submit(engine.Request)
-	ConfigureMasterWorkerChan(chan engine.Request)
-	WorkerReady(chan engine.Request)
+	WorkerChan() chan engine.Request // 向调度器询问：我有一个 worker，给我哪个 channel
 	Run()
+	ReadyNotify // 如果不将 ReadyNotify 放入 Scheduler 中，在 Run 函数中调用 createWorker 函数时则会报错
+}
+
+// ReadyNotify 在 createWorker 函数中需要使用到 WorkerReady 函数的功能，但在参数中将 Scheduler 全部传入过于繁重，因此将该功能单独提取出来
+type ReadyNotify interface {
+	WorkerReady(chan engine.Request)
 }
 
 func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
@@ -25,7 +30,7 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 	out := make(chan engine.ParserResult)
 
 	for i := 0; i < e.WorkerCount; i++ {
-		createWorker(out, e.Scheduler)
+		createWorker(e.Scheduler.WorkerChan(), out, e.Scheduler)
 	}
 
 	for _, r := range seeds {
@@ -46,12 +51,11 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 	}
 }
 
-func createWorker(out chan engine.ParserResult, s Scheduler) {
-	in := make(chan engine.Request)
+func createWorker(in chan engine.Request, out chan engine.ParserResult, ready ReadyNotify) {
 	go func() {
 		for {
 			// 告诉 Scheduler 我已经就绪了，就绪后才能继续接收数据
-			s.WorkerReady(in)
+			ready.WorkerReady(in)
 			request := <-in
 			result, err := worker(request)
 			if err != nil {
