@@ -3,6 +3,7 @@ package queuedengine
 import (
 	"crawler/concurrent/engine"
 	"crawler/concurrent/fetcher"
+	"crawler/concurrent/model"
 	"log"
 )
 
@@ -34,18 +35,30 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 	}
 
 	for _, r := range seeds {
+		// URL 去重
+		if isDuplicate(r.Url) {
+			//log.Printf("Duplicate request: %s", r.Url)
+			continue
+		}
 		e.Scheduler.Submit(r)
 	}
 
-	itemCount := 0
+	profileCount := 0
 	for {
 		// 将从 worker 中接收的数据分为两部分：打印 item 和 将 request 送入 scheduler 中
 		result := <-out
 		for _, item := range result.Items {
-			log.Printf("Got item #%d: %v\n", itemCount, item)
-			itemCount++
+			if _, ok := item.(model.Profile); ok {
+				log.Printf("Got item #%d: %v\n", profileCount, item)
+				profileCount++
+			}
 		}
 		for _, request := range result.Requests {
+			// URL 去重
+			if isDuplicate(request.Url) {
+				//log.Printf("Duplicate request: %s", request.Url)
+				continue
+			}
 			e.Scheduler.Submit(request)
 		}
 	}
@@ -67,7 +80,7 @@ func createWorker(in chan engine.Request, out chan engine.ParserResult, ready Re
 }
 
 func worker(r engine.Request) (engine.ParserResult, error) {
-	log.Printf("Fetching %s", r.Url)
+	//log.Printf("Fetching %s", r.Url)
 	body, err := fetcher.Fetch(r.Url)
 	if err != nil {
 		log.Printf("Fetcher: error fetching url %s, %v", r.Url, err)
@@ -75,4 +88,14 @@ func worker(r engine.Request) (engine.ParserResult, error) {
 	}
 
 	return r.ParserFunc(body), nil
+}
+
+var visitedUrls = make(map[string]bool)
+
+func isDuplicate(url string) bool {
+	if visitedUrls[url] {
+		return true
+	}
+	visitedUrls[url] = true
+	return false
 }
