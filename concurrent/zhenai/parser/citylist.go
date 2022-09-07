@@ -15,7 +15,8 @@ func ParseCityList(contents []byte) engine.ParserResult {
 
 	result := engine.ParserResult{}
 	for _, m := range all {
-		result.Items = append(result.Items, "City "+string(m[2]))
+		// 只向数据库中存储有价值的数据，city 的名字除外
+		//result.Items = append(result.Items, "City "+string(m[2]))
 		result.Requests = append(result.Requests, engine.Request{
 			Url:        string(m[1]),
 			ParserFunc: ParseCity,

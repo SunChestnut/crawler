@@ -22,13 +22,13 @@ requests 加入任务队列，把返回的 items 打印出来。
 
 ![concurrence-m400](resources/concurrence.png)
 
-🍑 针对 Scheduler 做了很多的实现
+### Scheduler 实现
 
 #### 实现 I
 
 🌀 **所有 Worker 公用一个输入**
 
-> 🤔那这样实现有什么缺点呢？
+> 🤔 那这样实现有什么缺点呢？
 
 scheduler 将任务分发到 work chan 中，多个 worker 从 worker chan 中拿 request 进行处理，处理完成的结果包含两部分：
 
@@ -37,7 +37,7 @@ scheduler 将任务分发到 work chan 中，多个 worker 从 worker chan 中�
 
 出现了【循环等待】的问题：worker 等待 scheduler 分发其处理结果中包含的 request，而 scheduler 等待 worker 接收其分发的任务
 
-> 🤔那如何解决呢？
+> 🤔 那如何解决呢？
 
 为每个 request 创建一个 go routine，每个 go routine 只做一件事，就是将 request 分发到 worker chan 这一操作，也就是下面的
 Scheduler 实现版本 II。
@@ -69,7 +69,8 @@ Worker。这种方式实现的爬虫性能与 实现II 基本相同。
 
 🫧 **计算 MD5 等哈希，再存哈希表**
 
-第二种就是先计算 URL 的 MD5，然后再将计算结果存入哈希表中，这样可解决直接存放 URL 导致的占用空间过大的问题。缺点是每个 URL 都需要计算其 MD5 的值，时间效率会降低。
+第二种就是先计算 URL 的 MD5，然后再将计算结果存入哈希表中，这样可解决直接存放 URL 导致的占用空间过大的问题。缺点是每个 URL
+都需要计算其 MD5 的值，时间效率会降低。
 
 🫧 **使用 Bloom Filter 多重哈希结构**
 

@@ -3,7 +3,6 @@ package queuedengine
 import (
 	"crawler/concurrent/engine"
 	"crawler/concurrent/fetcher"
-	"crawler/concurrent/model"
 	"log"
 )
 
@@ -12,6 +11,7 @@ import (
 type ConcurrentEngine struct {
 	Scheduler   Scheduler
 	WorkerCount int
+	ItemChan    chan any // 接收 Item 使用
 }
 
 type Scheduler interface {
@@ -37,26 +37,33 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 	for _, r := range seeds {
 		// URL 去重
 		if isDuplicate(r.Url) {
-			//log.Printf("Duplicate request: %s", r.Url)
+			log.Printf("Duplicate request: %s", r.Url)
 			continue
 		}
 		e.Scheduler.Submit(r)
 	}
 
-	profileCount := 0
+	//itemCount := 0
 	for {
 		// 将从 worker 中接收的数据分为两部分：打印 item 和 将 request 送入 scheduler 中
 		result := <-out
 		for _, item := range result.Items {
-			if _, ok := item.(model.Profile); ok {
-				log.Printf("Got item #%d: %v\n", profileCount, item)
-				profileCount++
-			}
+
+			// 【初始设计】只将 Item 打印到控制台上
+			//log.Printf("Got item #%d: %v\n", itemCount, item)
+			//itemCount++
+
+			// 【进阶设计】将 Item 存入数据库中
+			itemCopy := item
+			go func() {
+				e.ItemChan <- itemCopy
+			}()
+
 		}
 		for _, request := range result.Requests {
 			// URL 去重
 			if isDuplicate(request.Url) {
-				//log.Printf("Duplicate request: %s", request.Url)
+				log.Printf("Duplicate request: %s", request.Url)
 				continue
 			}
 			e.Scheduler.Submit(request)
