@@ -1,28 +1,14 @@
-package test
+package persist
 
 import (
 	"crawler/concurrent/engine"
 	"crawler/concurrent/model"
-	"crawler/concurrent/zhenai/parser"
-	"os"
 	"testing"
 )
 
-func TestParseProfile(t *testing.T) {
+func TestItemSaver(t *testing.T) {
 
-	contents, err := os.ReadFile("profile_test_data.html")
-	if err != nil {
-		panic(err)
-	}
-
-	result := parser.ParseProfile(contents, "http://localhost:8080/mock/album.zhenai.com/u/3903982005871861481", "一身傲气如你*")
-	if len(result.Items) != 1 {
-		t.Errorf("Items should contain 1 element; but was %v", result.Items)
-	}
-
-	actual := result.Items[0]
-
-	expected := engine.Item{
+	item := engine.Item{
 		Url: "http://localhost:8080/mock/album.zhenai.com/u/3903982005871861481",
 		Id:  "3903982005871861481",
 		PayLoad: model.Profile{
@@ -42,8 +28,13 @@ func TestParseProfile(t *testing.T) {
 		},
 	}
 
-	if expected != actual {
-		t.Errorf("expected %v; but was %v", expected, actual)
+	if err := save(item); err != nil {
+		t.Errorf("An error occured %v", err)
 	}
 
+}
+
+func TestSearch(t *testing.T) {
+	item := search("3903982005871861481")
+	t.Logf("Item : %v", item)
 }

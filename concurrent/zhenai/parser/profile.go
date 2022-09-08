@@ -23,7 +23,10 @@ var carRe = regexp.MustCompile(`<td><span class="label">是否购车：</span><s
 // 匹配用户详情下的【猜你喜欢】部分的用户
 var guessRe = regexp.MustCompile(` <a class="exp-user-name"[^>]*href="(http://localhost:8080/mock/album.zhenai.com/u/\d+)">([^>]+)</a>`)
 
-func ParseProfile(contents []byte, name string) engine.ParserResult {
+// 匹配 URL 中的 用户ID
+var idUrlRe = regexp.MustCompile(`http://localhost:8080/mock/album.zhenai.com/u/(\d+)`)
+
+func ParseProfile(contents []byte, url string, name string) engine.ParserResult {
 	profile := model.Profile{Name: name}
 
 	if age, err := strconv.Atoi(extractString(contents, ageRe)); err == nil {
@@ -46,16 +49,22 @@ func ParseProfile(contents []byte, name string) engine.ParserResult {
 	profile.XinZuo = extractString(contents, xinZuoRe)
 
 	result := engine.ParserResult{
-		Items: []any{profile},
+		Items: []engine.Item{
+			{
+				Url:     url,
+				Id:      extractString([]byte(url), idUrlRe),
+				PayLoad: profile,
+			},
+		},
 	}
 
 	matches := guessRe.FindAllSubmatch(contents, -1)
 	for _, m := range matches {
 		name := string(m[2])
 		result.Requests = append(result.Requests, engine.Request{
-			Url: string(m[1]),
+			Url: url,
 			ParserFunc: func(c []byte) engine.ParserResult {
-				return ParseProfile(c, name)
+				return ParseProfile(c, url, name)
 			},
 		})
 	}

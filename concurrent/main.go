@@ -12,7 +12,7 @@ func main() {
 
 	e := queuedengine.ConcurrentEngine{
 		Scheduler:   &scheduler.QueuedScheduler{},
-		WorkerCount: 1000,
+		WorkerCount: 100,
 		ItemChan:    persist.ItemSaver(),
 	}
 

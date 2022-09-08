@@ -11,7 +11,7 @@ import (
 type ConcurrentEngine struct {
 	Scheduler   Scheduler
 	WorkerCount int
-	ItemChan    chan any // 接收 Item 使用
+	ItemChan    chan engine.Item // 接收 Item 使用
 }
 
 type Scheduler interface {
