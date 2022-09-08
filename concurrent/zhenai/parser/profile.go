@@ -53,30 +53,35 @@ func ParseProfile(contents []byte, url string, name string) engine.ParserResult 
 			{
 				Url:     url,
 				Id:      extractString([]byte(url), idUrlRe),
-				PayLoad: profile,
+				Payload: profile,
 			},
 		},
 	}
 
 	matches := guessRe.FindAllSubmatch(contents, -1)
 	for _, m := range matches {
-		name := string(m[2])
 		result.Requests = append(result.Requests, engine.Request{
-			Url: url,
-			ParserFunc: func(c []byte) engine.ParserResult {
-				return ParseProfile(c, url, name)
-			},
+			Url:        url,
+			ParserFunc: ProfileParser(string(m[2])),
 		})
 	}
 
 	return result
 }
 
+// extractString 提取正则表达式匹配后的结果中的第一个内容
 func extractString(contents []byte, re *regexp.Regexp) string {
 	match := re.FindSubmatch(contents)
 	if len(match) >= 2 {
 		return string(match[1])
 	} else {
 		return ""
+	}
+}
+
+// ProfileParser ==> 根据 name 返回可解析出用户信息的函数
+func ProfileParser(name string) func(contents []byte, url string) engine.ParserResult {
+	return func(contents []byte, url string) engine.ParserResult {
+		return ParseProfile(contents, url, name)
 	}
 }

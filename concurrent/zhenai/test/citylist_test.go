@@ -3,7 +3,7 @@ package test
 import (
 	"crawler/stand_alone/fetcher"
 	"crawler/stand_alone/zhenai/parser"
-	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -17,7 +17,7 @@ func TestFetch(t *testing.T) {
 		panic(err)
 	}
 
-	err = ioutil.WriteFile("./citylist_test_data.html", bytes, 0777)
+	err = os.WriteFile("./citylist_test_data.html", bytes, 0777)
 
 	if err != nil {
 		panic(err)
@@ -25,7 +25,7 @@ func TestFetch(t *testing.T) {
 }
 
 func TestParserCityList(t *testing.T) {
-	contents, err := ioutil.ReadFile("citylist_test_data.html")
+	contents, err := os.ReadFile("citylist_test_data.html")
 	if err != nil {
 		panic(err)
 	}

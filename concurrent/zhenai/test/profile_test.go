@@ -25,7 +25,7 @@ func TestParseProfile(t *testing.T) {
 	expected := engine.Item{
 		Url: "http://localhost:8080/mock/album.zhenai.com/u/3903982005871861481",
 		Id:  "3903982005871861481",
-		PayLoad: model.Profile{
+		Payload: model.Profile{
 			Name:       "一身傲气如你*",
 			Age:        24,
 			Height:     140,

@@ -7,7 +7,7 @@ import (
 	"golang.org/x/text/encoding"
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -36,7 +36,7 @@ func Fetch(url string) ([]byte, error) {
 	e := determineEncoding(bodyReader)
 	utf8Reader := transform.NewReader(bodyReader, e.NewDecoder())
 
-	all, err := ioutil.ReadAll(utf8Reader)
+	all, err := io.ReadAll(utf8Reader)
 	if err != nil {
 		panic(nil)
 	}

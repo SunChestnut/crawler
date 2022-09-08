@@ -1,8 +1,11 @@
 package engine
 
+// ParserFunc ==> 根据 内容 和 url 即可具有解析功能的函数
+type ParserFunc func(contents []byte, url string) ParserResult
+
 type Request struct {
 	Url        string
-	ParserFunc func([]byte) ParserResult
+	ParserFunc ParserFunc
 }
 
 type ParserResult struct {
@@ -13,7 +16,8 @@ type ParserResult struct {
 type Item struct {
 	Url     string
 	Id      string
-	PayLoad any
+	Type    string
+	Payload any
 }
 
 func NilParser([]byte) ParserResult {

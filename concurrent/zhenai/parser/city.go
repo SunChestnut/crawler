@@ -11,20 +11,17 @@ var (
 )
 
 // ParseCity 城市解析器
-func ParseCity(contents []byte) engine.ParserResult {
+func ParseCity(contents []byte, url string) engine.ParserResult {
 	result := engine.ParserResult{}
 
 	all := profileRe.FindAllSubmatch(contents, -1)
 	for _, m := range all {
 		url := string(m[1])
-		name := string(m[2])
 		// 只向数据库中存储有价值的数据，user 的名字除外
 		//result.Items = append(result.Items, "User "+name)
 		result.Requests = append(result.Requests, engine.Request{
-			Url: url,
-			ParserFunc: func(contents []byte) engine.ParserResult {
-				return ParseProfile(contents, url, name)
-			},
+			Url:        url,
+			ParserFunc: ProfileParser(string(m[2])),
 		})
 	}
 

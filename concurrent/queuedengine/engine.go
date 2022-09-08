@@ -94,7 +94,7 @@ func worker(r engine.Request) (engine.ParserResult, error) {
 		return engine.ParserResult{}, err
 	}
 
-	return r.ParserFunc(body), nil
+	return r.ParserFunc(body, r.Url), nil
 }
 
 var visitedUrls = make(map[string]bool)
