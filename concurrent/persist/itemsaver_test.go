@@ -38,9 +38,9 @@ func TestItemSaver(t *testing.T) {
 			Car:        "有车",
 		},
 	}
-	if err := save(client, item, index); err != nil {
-		t.Errorf("An error occured %v", err)
-	}
+	//if err := save(client, item, index); err != nil {
+	//	t.Errorf("An error occured %v", err)
+	//}
 
 	// TODO 如何根据 DocumentID 检索数据？
 	// 若根据 ID 从 ElasticSearch 检索的数据与上述数据相同，则算保存成功

@@ -125,12 +125,12 @@ func search(client *elasticsearch.Client, index, id string) engine.Item {
 	}
 
 	// Print the response status, number of results, and request duration.
-	//log.Printf(
-	//	"[%s] %d hits; took: %dms",
-	//	res.Status(),
-	//	int(r["hits"].(map[string]any)["total"].(map[string]any)["value"].(float64)),
-	//	int(r["took"].(float64)),
-	//)
+	log.Printf(
+		"[%s] %d hits; took: %dms",
+		res.Status(),
+		int(r["hits"].(map[string]any)["total"].(map[string]any)["value"].(float64)),
+		int(r["took"].(float64)),
+	)
 
 	var actual engine.Item
 	// Print the ID and document source for each hit.

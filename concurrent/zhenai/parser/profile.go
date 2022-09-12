@@ -53,6 +53,7 @@ func ParseProfile(contents []byte, url string, name string) engine.ParserResult 
 			{
 				Url:     url,
 				Id:      extractString([]byte(url), idUrlRe),
+				Type:    "zhenai",
 				Payload: profile,
 			},
 		},
