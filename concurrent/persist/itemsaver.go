@@ -30,7 +30,7 @@ func ItemSaver(index string) (chan engine.Item, error) {
 			log.Printf("【Item Saver】Got item #%d: %v", itemCount, item)
 			itemCount++
 
-			if err := save(client, item, index); err != nil {
+			if err := Save(client, item, index); err != nil {
 				log.Printf("【Item Saver】error saving item : %v", err)
 			}
 		}
@@ -38,7 +38,7 @@ func ItemSaver(index string) (chan engine.Item, error) {
 	return out, nil
 }
 
-func save(client *elasticsearch.Client, item engine.Item, index string) error {
+func Save(client *elasticsearch.Client, item engine.Item, index string) error {
 
 	data, err := json.Marshal(item)
 	if err != nil {

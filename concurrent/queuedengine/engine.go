@@ -63,7 +63,7 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 		for _, request := range result.Requests {
 			// URL 去重
 			if isDuplicate(request.Url) {
-				log.Printf("Duplicate request: %s", request.Url)
+				//log.Printf("Duplicate request: %s", request.Url)
 				continue
 			}
 			e.Scheduler.Submit(request)
