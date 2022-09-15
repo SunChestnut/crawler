@@ -79,3 +79,9 @@ Worker。这种方式实现的爬虫性能与 实现II 基本相同。
 🫧 **使用 Redis 等 Key-Value 存储系统实现分布式去重**
 
 当 URL 过多，内存存不下的时候，可以改为使用数据库存储。
+
+## 分布式架构
+
+### 解析器序列化流程
+
+![SerializedWorker.png-m400](resources/SerializedWorker.png)

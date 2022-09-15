@@ -20,16 +20,16 @@ func ParseCity(contents []byte, url string) engine.ParserResult {
 		// 只向数据库中存储有价值的数据，user 的名字除外
 		//result.Items = append(result.Items, "User "+name)
 		result.Requests = append(result.Requests, engine.Request{
-			Url:        url,
-			ParserFunc: ProfileParser(string(m[2])),
+			Url:    url,
+			Parser: NewProfileParser(string(m[2])),
 		})
 	}
 
 	matches := cityUrlRe.FindAllSubmatch(contents, -1)
 	for _, m := range matches {
 		result.Requests = append(result.Requests, engine.Request{
-			Url:        string(m[1]),
-			ParserFunc: ParseCity,
+			Url:    string(m[1]),
+			Parser: engine.NewFuncParser(ParseCity, "ParseCity"),
 		})
 	}
 

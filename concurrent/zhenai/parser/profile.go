@@ -26,7 +26,7 @@ var guessRe = regexp.MustCompile(` <a class="exp-user-name"[^>]*href="(http://lo
 // 匹配 URL 中的 用户ID
 var idUrlRe = regexp.MustCompile(`http://localhost:8080/mock/album.zhenai.com/u/(\d+)`)
 
-func ParseProfile(contents []byte, url string, name string) engine.ParserResult {
+func parseProfile(contents []byte, url string, name string) engine.ParserResult {
 	profile := model.Profile{Name: name}
 
 	if age, err := strconv.Atoi(extractString(contents, ageRe)); err == nil {
@@ -62,8 +62,8 @@ func ParseProfile(contents []byte, url string, name string) engine.ParserResult 
 	matches := guessRe.FindAllSubmatch(contents, -1)
 	for _, m := range matches {
 		result.Requests = append(result.Requests, engine.Request{
-			Url:        url,
-			ParserFunc: ProfileParser(string(m[2])),
+			Url:    url,
+			Parser: NewProfileParser(string(m[2])),
 		})
 	}
 
@@ -81,8 +81,24 @@ func extractString(contents []byte, re *regexp.Regexp) string {
 }
 
 // ProfileParser ==> 根据 name 返回可解析出用户信息的函数
-func ProfileParser(name string) func(contents []byte, url string) engine.ParserResult {
-	return func(contents []byte, url string) engine.ParserResult {
-		return ParseProfile(contents, url, name)
-	}
+//func ProfileParser(name string) func(contents []byte, url string) engine.ParserResult {
+//	return func(contents []byte, url string) engine.ParserResult {
+//		return ParseProfile(contents, url, name)
+//	}
+//}
+
+type ProfileParser struct {
+	userName string
+}
+
+func (p *ProfileParser) Parse(contents []byte, url string) engine.ParserResult {
+	return parseProfile(contents, url, p.userName)
+}
+
+func (p *ProfileParser) Serialize() (name string, args any) {
+	return "ProfileParser", p.userName
+}
+
+func NewProfileParser(name string) *ProfileParser {
+	return &ProfileParser{userName: name}
 }

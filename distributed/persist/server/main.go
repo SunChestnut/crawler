@@ -11,7 +11,7 @@ import (
 
 func serverRpc(host, index string) error {
 	client, err := elasticsearch.NewClient(elasticsearch.Config{
-		Addresses: []string{"http://192.168.56.10:9200/"},
+		Addresses: []string{config.ElasticSearchAddr},
 	})
 	if err != nil {
 		log.Printf("error create elasticsearch client : %v", err)

@@ -93,8 +93,7 @@ func worker(r engine.Request) (engine.ParserResult, error) {
 		log.Printf("Fetcher: error fetching url %s, %v", r.Url, err)
 		return engine.ParserResult{}, err
 	}
-
-	return r.ParserFunc(body, r.Url), nil
+	return r.Parser.Parse(body, r.Url), nil
 }
 
 var visitedUrls = make(map[string]bool)
