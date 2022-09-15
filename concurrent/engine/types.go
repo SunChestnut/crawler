@@ -1,7 +1,6 @@
 package engine
 
-// ParserFunc ==> 根据 内容 和 url 即可具有解析功能的函数
-type ParserFunc func(contents []byte, url string) ParserResult
+import "crawler/distributed/config"
 
 type Parser interface {
 	Parse(contents []byte, url string) ParserResult
@@ -32,8 +31,11 @@ func (NilParser) Parse(contents []byte, url string) ParserResult {
 }
 
 func (NilParser) Serialize() (name string, args any) {
-	return "NilParser", nil
+	return config.NilParser, nil
 }
+
+// ParserFunc ==> 根据 内容 和 url 即可具有解析功能的函数
+type ParserFunc func(contents []byte, url string) ParserResult
 
 type FuncParser struct {
 	parser ParserFunc

@@ -31,7 +31,7 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 
 	itemCount := 0
 	for {
-		// 将从 worker 中接收的数据分为两部分：打印 item 和 将 request 送入 scheduler 中
+		// 将从 Worker 中接收的数据分为两部分：打印 item 和 将 request 送入 scheduler 中
 		result := <-out
 		for _, item := range result.Items {
 			log.Printf("Got item #%d: %v\n", itemCount, item)
@@ -47,7 +47,7 @@ func createWorker(in chan Request, out chan ParserResult) {
 	go func() {
 		for {
 			request := <-in
-			result, err := worker(request)
+			result, err := Worker(request)
 			if err != nil {
 				continue
 			}

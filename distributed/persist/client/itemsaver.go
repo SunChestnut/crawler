@@ -23,7 +23,7 @@ func ItemSaver(host string) (chan engine.Item, error) {
 
 			// Call PRC to save item
 			result := ""
-			err := client.Call(config.ItemSaverServiceMethod, item, &result)
+			err := client.Call(config.ItemSaverServiceRpc, item, &result)
 			if err != nil {
 				log.Printf("Item Saver: error saving item %v: %v", item, err)
 			}

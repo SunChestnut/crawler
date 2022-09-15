@@ -43,7 +43,7 @@ func TestItemSaver(t *testing.T) {
 		},
 	}
 	var result string
-	err = client.Call(config.ItemSaverServiceMethod, item, &result)
+	err = client.Call(config.ItemSaverServiceRpc, item, &result)
 	if err != nil || result != "ok" {
 		t.Errorf("error call ItemSaverService : %v", err)
 	}

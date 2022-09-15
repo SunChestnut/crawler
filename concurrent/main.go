@@ -6,6 +6,7 @@ import (
 	"crawler/concurrent/queuedengine"
 	"crawler/concurrent/scheduler"
 	"crawler/concurrent/zhenai/parser"
+	"crawler/distributed/config"
 )
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 
 	e.Run(engine.Request{
 		Url:    "http://localhost:8080/mock/www.zhenai.com/zhenghun",
-		Parser: engine.NewFuncParser(parser.ParseCityList, "ParseCityList"),
+		Parser: engine.NewFuncParser(parser.ParseCityList, config.ParseCityList),
 	})
 
 }
