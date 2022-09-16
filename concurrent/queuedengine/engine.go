@@ -9,10 +9,13 @@ import (
 // ConcurrentEngine 针对【用队列实现调度器】所适配的 Engine/**
 
 type ConcurrentEngine struct {
-	Scheduler   Scheduler
-	WorkerCount int
-	ItemChan    chan engine.Item // 接收 Item 使用
+	Scheduler        Scheduler
+	WorkerCount      int
+	ItemChan         chan engine.Item // 接收 Item 使用
+	RequestProcessor Processor
 }
+
+type Processor func(engine.Request) (engine.ParserResult, error)
 
 type Scheduler interface {
 	Submit(engine.Request)
@@ -31,7 +34,7 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 	out := make(chan engine.ParserResult)
 
 	for i := 0; i < e.WorkerCount; i++ {
-		createWorker(e.Scheduler.WorkerChan(), out, e.Scheduler)
+		e.createWorker(e.Scheduler.WorkerChan(), out, e.Scheduler)
 	}
 
 	for _, r := range seeds {
@@ -71,13 +74,16 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 	}
 }
 
-func createWorker(in chan engine.Request, out chan engine.ParserResult, ready ReadyNotify) {
+func (e *ConcurrentEngine) createWorker(in chan engine.Request, out chan engine.ParserResult, ready ReadyNotify) {
 	go func() {
 		for {
 			// 告诉 Scheduler 我已经就绪了，就绪后才能继续接收数据
 			ready.WorkerReady(in)
 			request := <-in
-			result, err := worker(request)
+			//【并发版】
+			//result, err := worker(request)
+			//【分布式版】
+			result, err := e.RequestProcessor(request)
 			if err != nil {
 				continue
 			}
