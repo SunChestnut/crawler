@@ -9,7 +9,6 @@ import (
 	itemSaver "crawler/distributed/persist/client"
 	worker "crawler/distributed/worker/client"
 	"fmt"
-	"log"
 )
 
 func main() {
@@ -19,10 +18,11 @@ func main() {
 		panic(err)
 	}
 
-	processor, err := worker.CreateProcessor()
-	if err != nil {
-		log.Fatalf("error start worker client : %v", err)
-	}
+	hosts := []string{fmt.Sprintf(":%d", config.WorkerPort0), fmt.Sprintf(":%d", config.WorkerPort1)}
+
+	// create client pool
+	pool := worker.CreateClientPool(hosts)
+	processor := worker.CreateProcessor(pool)
 
 	e := queuedengine.ConcurrentEngine{
 		Scheduler:        &scheduler.QueuedScheduler{},

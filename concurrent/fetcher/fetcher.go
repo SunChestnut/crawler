@@ -2,6 +2,7 @@ package fetcher
 
 import (
 	"bufio"
+	"crawler/distributed/config"
 	"fmt"
 	"golang.org/x/net/html/charset"
 	"golang.org/x/text/encoding"
@@ -14,7 +15,8 @@ import (
 )
 
 // 用于限制请求的速度，防止请求过快被限流，多个 worker 会抢这一个 rateLimiter，抢到后才能进行后续的 Get 请求
-var rateLimiter = time.Tick(100 * time.Millisecond)
+// var rateLimiter = time.Tick(100 * time.Millisecond)
+var rateLimiter = time.Tick(time.Second / config.Qps)
 
 func Fetch(url string) ([]byte, error) {
 

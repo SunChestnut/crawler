@@ -18,6 +18,7 @@ func ServeRpc(host string, service any) error {
 	if err != nil {
 		panic(err)
 	}
+	log.Printf("🥰Listening on %s\n", host)
 
 	for {
 		conn, err := listen.Accept()
@@ -35,7 +36,7 @@ func ServeRpc(host string, service any) error {
 func NewClient(host string) (*rpc.Client, error) {
 	conn, err := net.Dial("tcp", host)
 	if err != nil {
-		log.Printf("error dial rpc server : %v", err)
+		log.Printf("error dial rpc server: %v", err)
 		return nil, err
 	}
 
