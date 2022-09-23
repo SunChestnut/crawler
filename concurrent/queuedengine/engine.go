@@ -2,7 +2,6 @@ package queuedengine
 
 import (
 	"crawler/concurrent/engine"
-	"crawler/concurrent/fetcher"
 	"log"
 )
 
@@ -92,18 +91,9 @@ func (e *ConcurrentEngine) createWorker(in chan engine.Request, out chan engine.
 	}()
 }
 
-func worker(r engine.Request) (engine.ParserResult, error) {
-	//log.Printf("Fetching %s", r.Url)
-	body, err := fetcher.Fetch(r.Url)
-	if err != nil {
-		log.Printf("Fetcher: error fetching url %s, %v", r.Url, err)
-		return engine.ParserResult{}, err
-	}
-	return r.Parser.Parse(body, r.Url), nil
-}
-
 var visitedUrls = make(map[string]bool)
 
+// isDuplicate => 使用 Map 进行 URL 去重
 func isDuplicate(url string) bool {
 	if visitedUrls[url] {
 		return true
