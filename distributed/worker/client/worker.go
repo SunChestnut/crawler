@@ -10,6 +10,7 @@ import (
 	"net/rpc"
 )
 
+// CreateProcessor ==>
 func CreateProcessor(clientChan chan *rpc.Client) queuedengine.Processor {
 	//client, err := rpcsupport.NewClient(fmt.Sprintf(":%d", config.WorkerPort0))
 	//if err != nil {
@@ -22,8 +23,9 @@ func CreateProcessor(clientChan chan *rpc.Client) queuedengine.Processor {
 
 		// 调用 worker 服务端
 		var sResult worker.ParserResult
-		client := <-clientChan
-		err := client.Call(config.CrawlServiceRpc, sRequest, &sResult)
+		rpcClient := <-clientChan
+		// rpc client
+		err := rpcClient.Call(config.CrawlServiceRpc, sRequest, &sResult)
 		if err != nil {
 			return engine.ParserResult{}, err
 		}
@@ -34,6 +36,7 @@ func CreateProcessor(clientChan chan *rpc.Client) queuedengine.Processor {
 	return callWorkerServer
 }
 
+// CreateClientPool ==> 根据给定的 hosts 创建 rpc 客户端
 func CreateClientPool(hosts []string) chan *rpc.Client {
 	var clients []*rpc.Client
 	for _, h := range hosts {

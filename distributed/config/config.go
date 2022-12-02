@@ -2,10 +2,11 @@ package config
 
 const (
 	ItemSaverPort = 1234
-	WorkerPort0   = 9000
-	WorkerPort1   = 9001
+	WorkerPort0   = 9100 // worker 端口-0
+	WorkerPort1   = 9101 // worker 端口-1
+	WorkerPort2   = 9102 // worker 端口-2
 
-	ElasticSearchAddr  = "http://192.168.56.10:9200/"
+	ElasticSearchAddr  = "http://127.0.0.1:9200/"
 	ElasticSearchIndex = "dating_profile"
 
 	ItemSaverServiceRpc = "ItemSaverService.Save"

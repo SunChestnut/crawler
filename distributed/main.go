@@ -15,20 +15,26 @@ import (
 )
 
 func main() {
-	startBasedOnCommand()
+	startBasedOnConfig()
+	//startBasedOnCommand()
 }
 
 // startBasedOnConfig => 使用配置的端口启动
 func startBasedOnConfig() {
-	// host = :1234
+	// 调用 ItemSaver 客户端
 	itemChan, err := itemSaver.ItemSaver(fmt.Sprintf(":%d", config.ItemSaverPort))
 	if err != nil {
-		log.Fatalf("💔 error create itemchan: %v", err)
+		log.Fatalf("💔error create itemchan: %v", err)
 	}
 
-	hosts := []string{fmt.Sprintf(":%d", config.WorkerPort0), fmt.Sprintf(":%d", config.WorkerPort1)}
+	hosts := []string{
+		//fmt.Sprintf(":%d", config.WorkerPort0),
+		fmt.Sprintf("127.0.0.1:%d", config.WorkerPort0),
+		fmt.Sprintf("127.0.0.1:%d", config.WorkerPort1),
+		fmt.Sprintf("127.0.0.1:%d", config.WorkerPort2),
+	}
 
-	// create client pool
+	// 创建 RPC 客户端连接池，连接到给定的 hosts 服务端
 	pool := worker.CreateClientPool(hosts)
 	processor := worker.CreateProcessor(pool)
 

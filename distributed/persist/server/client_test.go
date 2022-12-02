@@ -14,7 +14,7 @@ func TestItemSaver(t *testing.T) {
 
 	// 1⃣️Start ItemSaverServer
 	go serverRpc(host, "test1")
-	time.Sleep(time.Minute)
+	time.Sleep(200 * time.Millisecond)
 
 	// 2⃣️Start ItemSaverClient
 	client, err := rpcsupport.NewClient(host)

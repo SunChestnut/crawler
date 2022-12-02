@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"crawler/concurrent/engine"
+	"crawler/distributed/config"
 	"crawler/frontend/model"
 	"crawler/frontend/view"
 	"encoding/json"
@@ -21,7 +22,7 @@ type SearchResultHandler struct {
 func CreateSearchResultHandler(template string) SearchResultHandler {
 	client, err := elasticsearch.NewClient(
 		elasticsearch.Config{
-			Addresses: []string{"http://192.168.56.10:9200/"},
+			Addresses: []string{config.ElasticSearchAddr},
 		})
 	if err != nil {
 		panic(err)

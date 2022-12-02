@@ -79,7 +79,7 @@ func deserializeParser(p SerializedParser) (engine.Parser, error) {
 			return nil, fmt.Errorf("invalid arg: %v", p.Args)
 		}
 	default:
-		return nil, errors.New("unknown parser name")
+		return nil, errors.New("worker: unknown parser name")
 	}
 	return ep, nil
 }

@@ -10,7 +10,7 @@ import (
 func TestItemSaver(t *testing.T) {
 
 	cfg := elasticsearch.Config{
-		Addresses: []string{"http://192.168.56.10:9200/"},
+		Addresses: []string{"http://127.0.0.1:9200/"},
 	}
 
 	client, err := elasticsearch.NewClient(cfg)

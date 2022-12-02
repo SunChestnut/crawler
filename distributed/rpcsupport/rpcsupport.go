@@ -32,11 +32,11 @@ func ServeRpc(host string, service any) error {
 	return nil
 }
 
-// NewClient 创建一个新的 RPC Client
+// NewClient ==> 创建一个新的 RPC 客户端去连接地址为 host 的服务端
 func NewClient(host string) (*rpc.Client, error) {
 	conn, err := net.Dial("tcp", host)
 	if err != nil {
-		log.Printf("error dial rpc server: %v", err)
+		log.Printf("Error dial rpc server: %v", err)
 		return nil, err
 	}
 

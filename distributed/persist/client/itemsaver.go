@@ -8,6 +8,9 @@ import (
 )
 
 func ItemSaver(host string) (chan engine.Item, error) {
+
+	log.Printf("Item Saver Client Stating...")
+
 	client, err := rpcsupport.NewClient(host)
 	if err != nil {
 		return nil, err
