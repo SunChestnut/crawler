@@ -2,8 +2,8 @@
 package profile
 
 import (
-	"crawler/concurrent/model"
 	"crawler/mockserver/config"
+	model "crawler/model"
 	"fmt"
 	"html/template"
 	"io"

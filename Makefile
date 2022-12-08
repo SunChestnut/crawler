@@ -4,17 +4,17 @@ StartMockService:
 
 # 2⃣
 StartItemSaverService:
-	go run distributed/persist/server/itemsaver.go
+	go run persist/server/main.go
 
 # 3⃣
-StartMultiWorkerService_01:
-	 go run distributed/worker/server/worker.go -port 9100
+StartWorkerService_01:
+	 go run worker/server/main.go -port 9100
 
-StartMultiWorkerService_02:
-	go run distributed/worker/server/worker.go -port 9101
+StartWorkerService_02:
+	go run  worker/server/main.go -port 9101
 
-StartMultiWorkerService_03:
-	go run distributed/worker/server/worker.go -port 9102
+StartWorkerService_03:
+	go run  worker/server/main.go -port 9102
 
 # 4⃣
 StartMain:
@@ -26,6 +26,6 @@ StartStaticPage:
 
 
 gen:
-	 protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
         --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
         proto/*.proto

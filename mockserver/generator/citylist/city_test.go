@@ -2,8 +2,8 @@ package citylist
 
 import (
 	"bytes"
-	"crawler/concurrent/zhenai/parser"
 	"crawler/mockserver/config"
+	zparser "crawler/zhenai/parser"
 	"html/template"
 	"testing"
 )
@@ -21,7 +21,7 @@ func TestGenerate(t *testing.T) {
 		t.Fatalf("Cannot generate content: %v.", err)
 	}
 
-	r := parser.ParseCityList(b.Bytes(), "")
+	r := zparser.ParseCityList(b.Bytes(), "")
 
 	wantRequests := 470
 
