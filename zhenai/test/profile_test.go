@@ -3,7 +3,7 @@ package test
 import (
 	"crawler/concurrent/engine"
 	"crawler/concurrent/model"
-	"crawler/concurrent/zhenai/parser"
+	zparser "crawler/zhenai/parser"
 	"os"
 	"testing"
 )
@@ -15,7 +15,7 @@ func TestParseProfile(t *testing.T) {
 		panic(err)
 	}
 
-	result := parser.ParseProfile(contents, "http://localhost:8080/mock/album.zhenai.com/u/3903982005871861481", "一身傲气如你*")
+	result := zparser.ParseProfile(contents, "http://localhost:8080/mock/album.zhenai.com/u/3903982005871861481", "一身傲气如你*")
 	if len(result.Items) != 1 {
 		t.Errorf("Items should contain 1 element; but was %v", result.Items)
 	}

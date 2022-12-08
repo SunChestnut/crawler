@@ -1,8 +1,8 @@
 package test
 
 import (
-	"crawler/stand_alone/fetcher"
-	"crawler/stand_alone/zhenai/parser"
+	"crawler/concurrent/fetcher"
+	zparser "crawler/zhenai/parser"
 	"os"
 	"testing"
 )
@@ -40,7 +40,7 @@ func TestParserCityList(t *testing.T) {
 		"City 阿坝", "City 阿克苏", "City 阿拉善盟",
 	}
 
-	cityList := parser.ParseCityList(contents)
+	cityList := zparser.ParseCityList(contents, "")
 
 	if len(cityList.Requests) != resultSize {
 		t.Errorf("result should have %d requests; but had %d", resultSize, len(cityList.Requests))
@@ -55,7 +55,8 @@ func TestParserCityList(t *testing.T) {
 		t.Errorf("result should have %d requests; but had %d", resultSize, len(cityList.Items))
 	}
 	for i, item := range expectedCities {
-		if item != cityList.Items[i] {
+		// TODO
+		if item != cityList.Items[i].Type {
 			t.Errorf("expected citylist #%d: %s, but was %s", i, item, cityList.Items[i])
 		}
 	}
