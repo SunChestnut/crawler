@@ -8,6 +8,6 @@ var (
 	// 若将服务器部署在云，我们需要把这里替换成外网ip/域名:8080
 	ServerAddress = "localhost:8080"
 
-	// ListenAddress configures where the server listens at.
+	// ListenAddress configures where the cmd listens at.
 	ListenAddress = ":8080"
 )

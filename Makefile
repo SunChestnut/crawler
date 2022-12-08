@@ -1,26 +1,31 @@
 # 1⃣ 运行爬虫的 Mock Server
-startMockService:
+StartMockService:
 	go run mockserver/main.go
 
 # 2⃣
-startItemSaverService:
+StartItemSaverService:
 	go run distributed/persist/server/itemsaver.go
 
 # 3⃣
-startMultiWorkerService_01:
+StartMultiWorkerService_01:
 	 go run distributed/worker/server/worker.go -port 9100
 
-startMultiWorkerService_02:
+StartMultiWorkerService_02:
 	go run distributed/worker/server/worker.go -port 9101
 
-startMultiWorkerService_03:
+StartMultiWorkerService_03:
 	go run distributed/worker/server/worker.go -port 9102
 
 # 4⃣
-startMain:
+StartMain:
 	 go run distributed/main.go
 
 # 5⃣
-startStaticPage:
+StartStaticPage:
 	go run frontend/starter.go
 
+
+gen:
+	 protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+        --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+        proto/*.proto
