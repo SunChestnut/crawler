@@ -1,7 +1,9 @@
-package queuedengine
+package queue
 
 import (
+	"context"
 	"crawler/concurrent/engine"
+	"crawler/distributed/dbsupport"
 	"log"
 )
 
@@ -36,12 +38,22 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 		e.createWorker(e.Scheduler.WorkerChan(), out, e.Scheduler)
 	}
 
+	redisClient := dbsupport.NewRedisClient()
+	ctx := context.Background()
+
 	for _, r := range seeds {
-		// URL 去重
-		if isDuplicate(r.Url) {
+		// 【内存版】URL 去重
+		//if isDuplicate(r.Url) {
+		//	log.Printf("Duplicate request: %s", r.Url)
+		//	continue
+		//}
+
+		// 【Redis 版】URL 去重
+		if dbsupport.GetOrSaveFromRedis(redisClient, ctx, r.Url) {
 			log.Printf("Duplicate request: %s", r.Url)
 			continue
 		}
+
 		e.Scheduler.Submit(r)
 	}
 
@@ -51,11 +63,7 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 		result := <-out
 		for _, item := range result.Items {
 
-			// 【初始设计】只将 Item 打印到控制台上
-			//log.Printf("Got item #%d: %v\n", itemCount, item)
-			//itemCount++
-
-			// 【进阶设计】将 Item 存入数据库中
+			// 将 Item 存入数据库中
 			itemCopy := item
 			go func() {
 				e.ItemChan <- itemCopy
@@ -64,8 +72,10 @@ func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
 		}
 		for _, request := range result.Requests {
 			// URL 去重
-			if isDuplicate(request.Url) {
-				//log.Printf("Duplicate request: %s", request.Url)
+			//if isDuplicate(request.Url) {
+			//	continue
+			//}
+			if dbsupport.GetOrSaveFromRedis(redisClient, ctx, request.Url) {
 				continue
 			}
 			e.Scheduler.Submit(request)

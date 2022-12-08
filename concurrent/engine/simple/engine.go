@@ -1,6 +1,7 @@
-package engine
+package simple
 
 import (
+	"crawler/concurrent/engine"
 	"log"
 )
 
@@ -10,13 +11,13 @@ type ConcurrentEngine struct {
 }
 
 type Scheduler interface {
-	Submit(Request)
-	ConfigureMasterWorkerChan(chan Request)
+	Submit(engine.Request)
+	ConfigureMasterWorkerChan(chan engine.Request)
 }
 
-func (e *ConcurrentEngine) Run(seeds ...Request) {
-	in := make(chan Request)
-	out := make(chan ParserResult)
+func (e *ConcurrentEngine) Run(seeds ...engine.Request) {
+	in := make(chan engine.Request)
+	out := make(chan engine.ParserResult)
 
 	// 将 Engine 接收到的 request 送入 scheduler 中进行分发处理
 	e.Scheduler.ConfigureMasterWorkerChan(in)
@@ -43,11 +44,11 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 	}
 }
 
-func createWorker(in chan Request, out chan ParserResult) {
+func createWorker(in chan engine.Request, out chan engine.ParserResult) {
 	go func() {
 		for {
 			request := <-in
-			result, err := Worker(request)
+			result, err := engine.Worker(request)
 			if err != nil {
 				continue
 			}

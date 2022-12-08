@@ -1,9 +1,7 @@
-package utils
+package dbsupport
 
 import "testing"
 
 func TestDuplicateWithRedis(t *testing.T) {
-
-	DuplicateWithRedis()
 
 }

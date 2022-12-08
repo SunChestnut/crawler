@@ -2,8 +2,8 @@ package main
 
 import (
 	"crawler/concurrent/engine"
+	"crawler/concurrent/engine/queue"
 	"crawler/concurrent/persist"
-	"crawler/concurrent/queuedengine"
 	"crawler/concurrent/scheduler"
 	"crawler/concurrent/zhenai/parser"
 	"crawler/distributed/config"
@@ -17,7 +17,7 @@ func main() {
 		panic(err)
 	}
 
-	e := queuedengine.ConcurrentEngine{
+	e := queue.ConcurrentEngine{
 		Scheduler:        &scheduler.QueuedScheduler{},
 		WorkerCount:      100,
 		ItemChan:         itemChan,

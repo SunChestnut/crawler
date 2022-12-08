@@ -2,7 +2,7 @@ package client
 
 import (
 	"crawler/concurrent/engine"
-	"crawler/concurrent/queuedengine"
+	"crawler/concurrent/engine/queue"
 	"crawler/distributed/config"
 	"crawler/distributed/rpcsupport"
 	"crawler/distributed/worker"
@@ -11,7 +11,7 @@ import (
 )
 
 // CreateProcessor ==>
-func CreateProcessor(clientChan chan *rpc.Client) queuedengine.Processor {
+func CreateProcessor(clientChan chan *rpc.Client) queue.Processor {
 	//client, err := rpcsupport.NewClient(fmt.Sprintf(":%d", config.WorkerPort0))
 	//if err != nil {
 	//	return nil, err

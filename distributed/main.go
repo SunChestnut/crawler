@@ -2,7 +2,7 @@ package main
 
 import (
 	"crawler/concurrent/engine"
-	"crawler/concurrent/queuedengine"
+	"crawler/concurrent/engine/queue"
 	"crawler/concurrent/scheduler"
 	"crawler/concurrent/zhenai/parser"
 	"crawler/distributed/config"
@@ -38,7 +38,7 @@ func startBasedOnConfig() {
 	pool := worker.CreateClientPool(hosts)
 	processor := worker.CreateProcessor(pool)
 
-	e := queuedengine.ConcurrentEngine{
+	e := queue.ConcurrentEngine{
 		Scheduler:        &scheduler.QueuedScheduler{},
 		WorkerCount:      100,
 		ItemChan:         itemChan,
@@ -68,7 +68,7 @@ func startBasedOnCommand() {
 	pool := worker.CreateClientPool(strings.Split(*workerHosts, ","))
 	processor := worker.CreateProcessor(pool)
 
-	e := queuedengine.ConcurrentEngine{
+	e := queue.ConcurrentEngine{
 		Scheduler:        &scheduler.QueuedScheduler{},
 		WorkerCount:      100,
 		ItemChan:         itemChan,
