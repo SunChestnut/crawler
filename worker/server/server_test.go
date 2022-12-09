@@ -18,15 +18,24 @@ func TestWorker(t *testing.T) {
 
 	workerClient := grpcsupport.NewWorkerClient(address)
 
-	request := pb.SerializedRequest{
-		Url: "http://localhost:8080/mock/album.zhenai.com/u/3903982005871861481",
+	//request := pb.SerializedRequest{
+	//	Url: "http://localhost:8080/mock/album.zhenai.com/u/3903982005871861481",
+	//	Parser: &pb.ParserFunc{
+	//		FunctionName: config.ParseProfile,
+	//		Args:         "一身傲气如你*",
+	//	},
+	//}
+
+	//  TODO parser city
+	request2 := pb.SerializedRequest{
+		Url: "http://localhost:8080/mock/www.zhenai.com/zhenghun",
 		Parser: &pb.ParserFunc{
-			FunctionName: config.ParseProfile,
-			Args:         "一身傲气如你*",
+			FunctionName: config.ParseCityList,
+			Args:         "",
 		},
 	}
 
-	parserResult, err := workerClient.Process(context.Background(), &request)
+	parserResult, err := workerClient.Process(context.Background(), &request2)
 	require.NoError(t, err)
 
 	result := parser.DeserializeParserResult(parserResult)

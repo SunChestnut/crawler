@@ -58,11 +58,11 @@ func getFunctionByNameAndArgs(p *pb.ParserFunc) (model.Parser, error) {
 	var tp *model.FuncParser
 	switch p.FunctionName {
 	case config.ParseCityList:
-		tp = model.NewFuncParser(zparser.ParseCityList, config.ParseCityList)
+		tp = model.NewFuncParser(parser.ParseCityList, config.ParseCityList)
 	case config.ParseCity:
-		tp = model.NewFuncParser(zparser.ParseCity, config.ParseCity)
+		tp = model.NewFuncParser(parser.ParseCity, config.ParseCity)
 	case config.ParseProfile:
-		return zparser.NewProfileParser(p.Args), nil
+		return parser.NewProfileParser(p.Args), nil
 	default:
 		return nil, errors.New("[getFunctionByNameAndArgs] unknown parser name")
 	}

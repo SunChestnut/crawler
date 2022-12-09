@@ -1,4 +1,4 @@
-package zparser
+package parser
 
 import (
 	"crawler/config"

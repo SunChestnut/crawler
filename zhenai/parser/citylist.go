@@ -1,8 +1,9 @@
-package zparser
+package parser
 
 import (
 	"crawler/config"
 	"crawler/model"
+	"log"
 	"regexp"
 )
 
@@ -10,6 +11,8 @@ const cityListRe = `<a href="(http://localhost:8080/mock/www.zhenai.com/zhenghun
 
 // ParseCityList 城市列表解析器
 func ParseCityList(contents []byte, _ string) model.ParserResult {
+
+	log.Printf("ParseCityList is running...\n")
 
 	re := regexp.MustCompile(cityListRe)
 	all := re.FindAllSubmatch(contents, -1)

@@ -48,21 +48,25 @@ func NewWorkerClient(address string) pb.CrawlServiceClient {
 	return pb.NewCrawlServiceClient(conn)
 }
 
-func CreateWorkerClientPool(hosts []string) chan pb.CrawlServiceClient {
-	var clients []pb.CrawlServiceClient
+// CreateWorkerClientPool 根据服务器地址创建多个 worker 客户端连接
+func CreateWorkerClientPool(hosts []string) chan *pb.CrawlServiceClient {
+	var clients []*pb.CrawlServiceClient
 	for _, h := range hosts {
 		grpcClient := NewWorkerClient(h)
-		clients = append(clients, grpcClient)
+		clients = append(clients, &grpcClient)
 
 		log.Printf("Worker Client connect to %s", h)
 	}
 
-	out := make(chan pb.CrawlServiceClient)
+	out := make(chan *pb.CrawlServiceClient)
 	go func() {
+		clientCount := 1
 		for {
 			// 轮流分发 client，且每轮分发结束后继续下一轮分发
 			for _, c := range clients {
 				out <- c
+				log.Printf("当前分发第 %d 个 worker client.\n", clientCount)
+				clientCount++
 			}
 		}
 	}()

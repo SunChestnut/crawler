@@ -50,6 +50,7 @@ var rateLimiter = time.Tick(time.Second / config.Qps)
 
 func Worker(r model.Request) (model.ParserResult, error) {
 	log.Printf("💤 Fetching %s", r.Url)
+
 	data, err := Fetch(r.Url)
 	if err != nil {
 		log.Printf("[worker.service.Worker] error fetching url %s, %v", r.Url, err)

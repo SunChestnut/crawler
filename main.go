@@ -32,7 +32,7 @@ func main() {
 
 	e := engine.Engine{
 		Scheduler:        &scheduler.QueuedScheduler{},
-		WorkerCount:      100,
+		WorkerCount:      5,
 		ItemChan:         itemSaverClient,
 		RequestProcessor: processor,
 	}
