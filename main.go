@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crawler/config"
 	"crawler/engine"
 	"crawler/engine/scheduler"
@@ -20,15 +21,17 @@ func main() {
 		log.Fatalf("💔error start itemSaver client: %v", err)
 	}
 
-	// ItemSaver 服务器启动地址
+	// Worker 服务器启动地址
 	hosts := []string{
 		fmt.Sprintf("127.0.0.1:%d", config.WorkerPort0),
 		//fmt.Sprintf("127.0.0.1:%d", config.WorkerPort1),
 		//fmt.Sprintf("127.0.0.1:%d", config.WorkerPort2),
 	}
 
+	ctx := context.Background()
+
 	workerClientPool := grpcsupport.CreateWorkerClientPool(hosts)
-	processor := wclient.CreateProcessor(workerClientPool)
+	processor := wclient.CreateProcessor(ctx, workerClientPool)
 
 	e := engine.Engine{
 		Scheduler:        &scheduler.QueuedScheduler{},

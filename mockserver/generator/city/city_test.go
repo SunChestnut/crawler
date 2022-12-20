@@ -2,9 +2,9 @@ package city
 
 import (
 	"bytes"
-	"crawler/concurrent/zhenai/parser"
 	"crawler/mockserver/config"
 	"crawler/mockserver/generator/profile"
+	"crawler/zhenai/parser"
 	"html/template"
 	"testing"
 )

@@ -28,6 +28,7 @@ func NewItemServer(esClient *elasticsearch.Client, index string) *ItemSaverServi
 
 func (server *ItemSaverService) Save(ctx context.Context, req *pb.ItemSaverRequest) (*pb.ItemSaverResponse, error) {
 	log.Println("[service.Save] receive a save-item request")
+
 	item := req.Item
 	err := SaveItemToEs(server.client, item, server.Index)
 	if err != nil {

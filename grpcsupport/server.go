@@ -20,7 +20,7 @@ func NewGrpcItemSaverServer(network, address string, service *service.ItemSaverS
 
 	err = grpcServer.Serve(listener)
 	if err != nil {
-		log.Fatal("[grpcsupport.NewGrpcItemSaverServer] cannot start gprc server: ", err)
+		log.Fatal("[grpcsupport.NewGrpcItemSaverServer] cannot start grpc server: ", err)
 	}
 }
 
@@ -32,10 +32,10 @@ func NewGrpcWorkerServer(network, address string, service *workerService.CrawlSe
 	if err != nil {
 		log.Fatal("[grpcsupport.NewGrpcWorkerServer] cannot start server: ", err)
 	}
-	log.Printf("[grpcsupport.NewGrpcWorkerServer] serer start to listening...\n")
 
+	log.Printf("[grpcsupport.NewGrpcWorkerServer] serer start to listening...\n")
 	err = grpcServer.Serve(listener)
 	if err != nil {
-		log.Fatal("[grpcsupport.NewGrpcWorkerServer] cannot start gprc server: ", err)
+		log.Fatal("[grpcsupport.NewGrpcWorkerServer] cannot start grpc server: ", err)
 	}
 }

@@ -2,6 +2,7 @@ package parser
 
 import (
 	"crawler/model"
+	"log"
 	"regexp"
 	"strconv"
 )
@@ -61,11 +62,12 @@ func ParseProfile(contents []byte, url string, name string) model.ParserResult {
 	matches := guessRe.FindAllSubmatch(contents, -1)
 	for _, m := range matches {
 		result.Requests = append(result.Requests, model.Request{
-			Url:    url,
+			Url:    string(m[1]),
 			Parser: NewProfileParser(string(m[2])),
 		})
 	}
 
+	log.Printf("[ParseProfile] result:%v\n", result)
 	return result
 }
 

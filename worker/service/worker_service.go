@@ -66,7 +66,6 @@ func Fetch(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("get...")
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("[worker.service.Fetch] wrong status code: %d", resp.StatusCode)

@@ -14,20 +14,13 @@ type Engine struct {
 	RequestProcessor model.Processor
 }
 
-func (e *Engine) CreateEngineWorker(num int, in chan model.Request, out chan model.ParserResult, ready scheduler.WorkerReadyNotify) {
+func (e *Engine) CreateEngineWorker(in chan model.Request, out chan model.ParserResult, ready scheduler.WorkerReadyNotify) {
 	go func() {
 		for {
-			log.Printf("[CreateEngineWorker] %d\n", num)
-
 			// 将空闲的 worker（worker 的类型就是存放了 Request 的 channel）交给调度器
 			ready.WorkerReady(in)
 			request := <-in
 			parserResult, err := e.RequestProcessor(request)
-
-			log.Printf("[CreateEngineWorker] %d request=%v\n", num, request.Url)
-
-			// TODO: CreateEngineWorker receive result: {[] []}
-			log.Printf("CreateEngineWorker receive result: %v\n", parserResult)
 
 			if err != nil {
 				continue
@@ -44,7 +37,7 @@ func (e *Engine) Run(seeds ...model.Request) {
 	// 创建 Worker
 	out := make(chan model.ParserResult)
 	for i := 0; i < e.WorkerCount; i++ {
-		e.CreateEngineWorker(i, e.Scheduler.CreateWorker(), out, e.Scheduler)
+		e.CreateEngineWorker(e.Scheduler.CreateWorker(), out, e.Scheduler)
 	}
 
 	// 遍历种子，根据种子中的 URL 剔除掉已经存在的种子，将未被剔除掉的种子送入调度器中
@@ -69,8 +62,6 @@ func (e *Engine) Run(seeds ...model.Request) {
 			}()
 		}
 		for _, r := range result.Requests {
-			log.Printf("Engine Run result request %v\n", r)
-
 			if service.IsDuplicate(r.Url) {
 				log.Printf("Engine Run result request dulplicate\n")
 				continue

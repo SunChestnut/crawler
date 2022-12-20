@@ -18,7 +18,7 @@ StartWorkerService_03:
 
 # 4⃣
 StartMain:
-	 go run main.go &
+	 go run main.go
 
 # 5⃣
 StartStaticPage:

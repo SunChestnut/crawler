@@ -42,14 +42,14 @@ func SerializeParserResult(parserResult model.ParserResult) *pb.SerializedParser
 
 // DeserializeRequest 【For Worker Client】
 func DeserializeRequest(r *pb.SerializedRequest) (model.Request, error) {
-	parser, err := getFunctionByNameAndArgs(r.Parser)
+	parserFunc, err := getFunctionByNameAndArgs(r.Parser)
 	if err != nil {
 		return model.Request{}, err
 	}
 
 	return model.Request{
 		Url:    r.Url,
-		Parser: parser,
+		Parser: parserFunc,
 	}, nil
 }
 
@@ -81,7 +81,7 @@ func DeserializeParserResult(r *pb.SerializedParserResult) model.ParserResult {
 		reqs = append(reqs, request)
 	}
 	return model.ParserResult{
-		Requests: nil,
+		Requests: reqs,
 		Items:    pbItemToModelItem(r.Items),
 	}
 }
@@ -95,8 +95,26 @@ func modelItemToPbItem(items []model.Item) []*pb.Item {
 			Type: v.Type,
 		}
 		switch t := v.Payload.(type) {
-		case pb.Profile:
-			item.Profile = &t
+		case model.Profile:
+			p := pb.Profile{
+				Name:       t.Name,
+				Gender:     t.Gender,
+				Age:        uint32(t.Age),
+				Height:     float32(t.Height),
+				Weight:     float32(t.Weight),
+				Income:     t.Income,
+				Marriage:   t.Marriage,
+				Education:  t.Education,
+				Occupation: t.Occupation,
+				HuKou:      t.HuKou,
+				XinZuo:     t.XinZuo,
+				House:      t.House,
+				Car:        t.Car,
+				CommonInfo: t.CommonInfo,
+			}
+			item.Profile = &p
+		default:
+			log.Fatalf("[modelItemToPbItem] convert FAIL! expected type=%T\n", t)
 		}
 		res = append(res, item)
 	}
