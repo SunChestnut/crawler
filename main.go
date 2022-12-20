@@ -7,7 +7,7 @@ import (
 	"crawler/engine/scheduler"
 	"crawler/model"
 	"crawler/persist/client"
-	"crawler/support/grpc"
+	"crawler/support/grpcsupport"
 	wclient "crawler/worker/client"
 	zparser "crawler/zhenai/parser"
 	"fmt"
@@ -30,7 +30,7 @@ func main() {
 
 	ctx := context.Background()
 
-	workerClientPool := grpc.CreateWorkerClientPool(hosts)
+	workerClientPool := grpcsupport.CreateWorkerClientPool(hosts)
 	processor := wclient.CreateProcessor(ctx, workerClientPool)
 
 	e := engine.Engine{
@@ -39,7 +39,7 @@ func main() {
 		ItemChan:         itemSaverClient,
 		RequestProcessor: processor,
 	}
-	e.Run(model.Request{
+	e.Run(ctx, model.Request{
 		Url:    config.MockServerUrl,
 		Parser: model.NewFuncParser(zparser.ParseCityList, config.ParseCityList),
 	})

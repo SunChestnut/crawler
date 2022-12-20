@@ -1,8 +1,10 @@
 package engine
 
 import (
+	"context"
 	"crawler/engine/scheduler"
 	"crawler/model"
+	"crawler/support/redissupport"
 	"crawler/worker/service"
 	"log"
 )
@@ -30,7 +32,7 @@ func (e *Engine) CreateEngineWorker(in chan model.Request, out chan model.Parser
 	}()
 }
 
-func (e *Engine) Run(seeds ...model.Request) {
+func (e *Engine) Run(ctx context.Context, seeds ...model.Request) {
 	// 启动调度器
 	e.Scheduler.Run()
 
@@ -40,10 +42,16 @@ func (e *Engine) Run(seeds ...model.Request) {
 		e.CreateEngineWorker(e.Scheduler.CreateWorker(), out, e.Scheduler)
 	}
 
+	redisClient := redissupport.NewRedisClient()
+
 	// 遍历种子，根据种子中的 URL 剔除掉已经存在的种子，将未被剔除掉的种子送入调度器中
 	for _, r := range seeds {
 		// URL 去重
-		if service.IsDuplicate(r.Url) {
+		//if service.IsDuplicate(r.Url) {
+		//	log.Printf("⚡️Duplicate request: %s", r.Url)
+		//	continue
+		//}
+		if service.ReduplicateWithRedis(ctx, redisClient, r.Url) {
 			log.Printf("⚡️Duplicate request: %s", r.Url)
 			continue
 		}
@@ -62,8 +70,12 @@ func (e *Engine) Run(seeds ...model.Request) {
 			}()
 		}
 		for _, r := range result.Requests {
-			if service.IsDuplicate(r.Url) {
-				log.Printf("Engine Run result request dulplicate\n")
+			//if service.IsDuplicate(r.Url) {
+			//	log.Printf("⚡️Duplicate request: %s", r.Url)
+			//	continue
+			//}
+			if service.ReduplicateWithRedis(ctx, redisClient, r.Url) {
+				log.Printf("⚡️Duplicate request: %s", r.Url)
 				continue
 			}
 			e.Scheduler.Submit(r)

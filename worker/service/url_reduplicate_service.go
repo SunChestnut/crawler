@@ -1,5 +1,11 @@
 package service
 
+import (
+	"context"
+	"crawler/support/redissupport"
+	"github.com/go-redis/redis/v9"
+)
+
 // 使用内存去重
 var visitedUrls = make(map[string]bool)
 
@@ -11,6 +17,12 @@ func IsDuplicate(url string) bool {
 	return false
 }
 
-//func ReduplicateWithRedis(ctx context.Context, client *redis.Client, url string) bool {
-//	  client.Get(ctx, url).Result()
-//}
+// ReduplicateWithRedis 使用 Redis 去重
+func ReduplicateWithRedis(ctx context.Context, client *redis.Client, url string) bool {
+	value := redissupport.GetFromRedis(client, url, ctx)
+	if value == "" {
+		redissupport.SaveToRedis(client, url, "1", ctx)
+		return false
+	}
+	return true
+}

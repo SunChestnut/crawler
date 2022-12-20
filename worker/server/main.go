@@ -2,7 +2,7 @@ package main
 
 import (
 	"crawler/config"
-	"crawler/support/grpc"
+	"crawler/support/grpcsupport"
 	"crawler/worker/service"
 	"flag"
 	"fmt"
@@ -18,7 +18,7 @@ func main() {
 	}
 	log.Printf("🌛worker server is running...")
 
-	grpc.NewGrpcWorkerServer(
+	grpcsupport.NewGrpcWorkerServer(
 		config.Network,
 		fmt.Sprintf("127.0.0.1:%d", *port),
 		service.NewCrawlService(),
