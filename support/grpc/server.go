@@ -1,4 +1,4 @@
-package grpcsupport
+package grpc
 
 import (
 	"crawler/pb"
@@ -15,12 +15,12 @@ func NewGrpcItemSaverServer(network, address string, service *service.ItemSaverS
 
 	listener, err := net.Listen(network, address)
 	if err != nil {
-		log.Fatal("[grpcsupport.NewGrpcItemSaverServer] cannot start server: ", err)
+		log.Fatal("[support.NewGrpcItemSaverServer] cannot start server: ", err)
 	}
 
 	err = grpcServer.Serve(listener)
 	if err != nil {
-		log.Fatal("[grpcsupport.NewGrpcItemSaverServer] cannot start grpc server: ", err)
+		log.Fatal("[support.NewGrpcItemSaverServer] cannot start grpc server: ", err)
 	}
 }
 
@@ -30,12 +30,12 @@ func NewGrpcWorkerServer(network, address string, service *workerService.CrawlSe
 
 	listener, err := net.Listen(network, address)
 	if err != nil {
-		log.Fatal("[grpcsupport.NewGrpcWorkerServer] cannot start server: ", err)
+		log.Fatal("[support.NewGrpcWorkerServer] cannot start server: ", err)
 	}
 
-	log.Printf("[grpcsupport.NewGrpcWorkerServer] serer start to listening...\n")
+	log.Printf("[support.NewGrpcWorkerServer] serer start to listening...\n")
 	err = grpcServer.Serve(listener)
 	if err != nil {
-		log.Fatal("[grpcsupport.NewGrpcWorkerServer] cannot start grpc server: ", err)
+		log.Fatal("[support.NewGrpcWorkerServer] cannot start grpc server: ", err)
 	}
 }

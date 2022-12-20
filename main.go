@@ -5,9 +5,9 @@ import (
 	"crawler/config"
 	"crawler/engine"
 	"crawler/engine/scheduler"
-	"crawler/grpcsupport"
 	"crawler/model"
 	"crawler/persist/client"
+	"crawler/support/grpc"
 	wclient "crawler/worker/client"
 	zparser "crawler/zhenai/parser"
 	"fmt"
@@ -30,7 +30,7 @@ func main() {
 
 	ctx := context.Background()
 
-	workerClientPool := grpcsupport.CreateWorkerClientPool(hosts)
+	workerClientPool := grpc.CreateWorkerClientPool(hosts)
 	processor := wclient.CreateProcessor(ctx, workerClientPool)
 
 	e := engine.Engine{

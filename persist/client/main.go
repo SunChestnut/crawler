@@ -2,16 +2,16 @@ package client
 
 import (
 	"context"
-	"crawler/grpcsupport"
 	"crawler/model"
 	"crawler/pb"
+	"crawler/support/grpc"
 	"log"
 )
 
 func StartItemSaverClient(address string) (chan model.Item, error) {
 	log.Println("💫ItemSaver client is running...")
 
-	grpcClient := grpcsupport.NewItemSaverClient(address)
+	grpcClient := grpc.NewItemSaverClient(address)
 	ctx := context.Background()
 	out := make(chan model.Item)
 	go func() {

@@ -24,4 +24,6 @@ const (
 	Qps = 20
 
 	MockServerUrl = "http://localhost:8080/mock/www.zhenai.com/zhenghun"
+
+	RedisAddr = "127.0.0.1:6379"
 )

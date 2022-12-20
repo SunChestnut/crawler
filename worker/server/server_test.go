@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"crawler/config"
-	"crawler/grpcsupport"
 	"crawler/pb"
+	"crawler/support/grpc"
 	"crawler/worker/parser"
 	"crawler/worker/service"
 	"github.com/stretchr/testify/require"
@@ -14,9 +14,9 @@ import (
 
 func TestWorker(t *testing.T) {
 	const address = "127.0.0.1:9100"
-	go grpcsupport.NewGrpcWorkerServer(config.Network, address, service.NewCrawlService())
+	go grpc.NewGrpcWorkerServer(config.Network, address, service.NewCrawlService())
 
-	workerClient := grpcsupport.NewWorkerClient(address)
+	workerClient := grpc.NewWorkerClient(address)
 
 	//request := pb.SerializedRequest{
 	//	Url: "http://localhost:8080/mock/album.zhenai.com/u/3903982005871861481",

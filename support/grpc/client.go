@@ -1,4 +1,4 @@
-package grpcsupport
+package grpc
 
 import (
 	"crawler/pb"
@@ -12,7 +12,7 @@ import (
 func NewItemSaverClient(address string) pb.ItemSaverServiceClient {
 	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatal("[grpcsupport.NewItemSaverClient] cannot dial grpc server: ", err)
+		log.Fatal("[support.NewItemSaverClient] cannot dial grpc server: ", err)
 	}
 
 	return pb.NewItemSaverServiceClient(conn)
@@ -43,7 +43,7 @@ func CreateClientPool(hosts []string) chan *pb.ItemSaverServiceClient {
 func NewWorkerClient(address string) pb.CrawlServiceClient {
 	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatal("[grpcsupport.NewWorkerClient] cannot dial grpc server: ", err)
+		log.Fatal("[support.NewWorkerClient] cannot dial grpc server: ", err)
 	}
 	return pb.NewCrawlServiceClient(conn)
 }

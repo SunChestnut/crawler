@@ -10,3 +10,7 @@ func IsDuplicate(url string) bool {
 	visitedUrls[url] = true
 	return false
 }
+
+//func ReduplicateWithRedis(ctx context.Context, client *redis.Client, url string) bool {
+//	  client.Get(ctx, url).Result()
+//}

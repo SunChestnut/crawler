@@ -2,8 +2,8 @@ package main
 
 import (
 	"crawler/config"
-	"crawler/grpcsupport"
 	"crawler/persist/service"
+	"crawler/support/grpc"
 	"flag"
 	"fmt"
 	"github.com/elastic/go-elasticsearch/v7"
@@ -33,5 +33,5 @@ func StartItemSaverServer(address, index string) {
 		log.Fatalf("[startServerGrpc] error create elasticsearch client: %v", err)
 	}
 
-	grpcsupport.NewGrpcItemSaverServer(config.Network, address, service.NewItemServer(esClient, index))
+	grpc.NewGrpcItemSaverServer(config.Network, address, service.NewItemServer(esClient, index))
 }
